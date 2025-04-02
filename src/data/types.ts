@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   createdAt: Date;
   updatedAt: Date;
+  user_id?: string;
 }
 
 export interface Sale {
@@ -17,6 +18,7 @@ export interface Sale {
   total: number;
   paymentMethod: PaymentMethod;
   date: Date;
+  user_id?: string;
 }
 
 export interface Expense {
@@ -28,6 +30,7 @@ export interface Expense {
   isRecurring?: boolean;
   recurrenceDay?: number;
   tags?: string[]; // Adding tags for expense categorization
+  user_id?: string;
 }
 
 export type PaymentMethod = 'cash' | 'credit' | 'debit' | 'pix' | 'other' | string;

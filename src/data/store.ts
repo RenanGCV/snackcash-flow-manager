@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { AppState, Product, Sale, Expense, PaymentMethod } from './types';
 import { persist } from 'zustand/middleware';
+import { supabase } from '@/integrations/supabase/client';
 
 interface StoreState extends AppState {
   // Product actions
@@ -45,14 +46,18 @@ export const useStore = create<StoreState>()(
       
       // Product actions
       addProduct: (product) => 
-        set((state) => ({
-          products: [...state.products, {
-            ...product,
-            id: crypto.randomUUID(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-          }]
-        })),
+        set((state) => {
+          const currentUser = supabase.auth.getUser();
+          return {
+            products: [...state.products, {
+              ...product,
+              id: crypto.randomUUID(),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              user_id: currentUser.data?.user?.id
+            }]
+          };
+        }),
       
       updateProduct: (id, updates) => 
         set((state) => ({
@@ -77,26 +82,34 @@ export const useStore = create<StoreState>()(
             return sum + (product?.price || 0) * item.quantity;
           }, 0);
           
+          const currentUser = supabase.auth.getUser();
+          
           return {
             sales: [...state.sales, {
               id: crypto.randomUUID(),
               products,
               total,
               paymentMethod,
-              date: new Date()
+              date: new Date(),
+              user_id: currentUser.data?.user?.id
             }]
           };
         }),
       
       // Expense actions
       addExpense: (expense) => 
-        set((state) => ({
-          expenses: [...state.expenses, {
-            ...expense,
-            id: crypto.randomUUID(),
-            date: new Date()
-          }]
-        })),
+        set((state) => {
+          const currentUser = supabase.auth.getUser();
+          
+          return {
+            expenses: [...state.expenses, {
+              ...expense,
+              id: crypto.randomUUID(),
+              date: new Date(),
+              user_id: currentUser.data?.user?.id
+            }]
+          };
+        }),
       
       updateExpense: (id, updates) => 
         set((state) => ({
