@@ -45,7 +45,12 @@ const ExpenseForm = ({ expense, onSave }: ExpenseFormProps) => {
         updateExpense(expense.id, values);
         toast.success(`Despesa "${values.description}" atualizada com sucesso!`);
       } else {
-        addExpense(values);
+        // Ensure all required fields are present before calling addExpense
+        addExpense({
+          description: values.description,
+          amount: values.amount,
+          category: values.category
+        });
         toast.success(`Despesa "${values.description}" adicionada com sucesso!`);
         form.reset({
           description: '',

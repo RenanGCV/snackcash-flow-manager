@@ -45,7 +45,12 @@ const ProductForm = ({ product, onSave }: ProductFormProps) => {
         updateProduct(product.id, values);
         toast.success(`Produto "${values.name}" atualizado com sucesso!`);
       } else {
-        addProduct(values);
+        // Ensure all required fields are present before calling addProduct
+        addProduct({
+          name: values.name,
+          description: values.description,
+          price: values.price
+        });
         toast.success(`Produto "${values.name}" adicionado com sucesso!`);
         form.reset({
           name: '',
