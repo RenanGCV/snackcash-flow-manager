@@ -11,6 +11,7 @@ O projeto é **de código aberto** e pode ser usado e editado livremente. Apenas
 ## 🔗 Informações do projeto
 
 **URL**: [🔗 Clique aqui para acessar na Lovable](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1)
+
 **URL**: [🔗 Clique aqui para testar](https://snackcash-flow-manager.lovable.app/auth)
 
 ## 🛠️ Como posso editar este código?
