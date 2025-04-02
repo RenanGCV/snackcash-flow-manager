@@ -3,9 +3,11 @@ import { useState } from 'react';
 import Layout from '../components/Layout';
 import ExpenseList from '../components/expenses/ExpenseList';
 import ExpenseForm from '../components/expenses/ExpenseForm';
+import TagManager from '../components/expenses/TagManager';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Expenses = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -26,7 +28,20 @@ const Expenses = () => {
           </Button>
         </div>
         
-        <ExpenseList />
+        <Tabs defaultValue="list">
+          <TabsList>
+            <TabsTrigger value="list">Lista de Despesas</TabsTrigger>
+            <TabsTrigger value="tags">Gerenciar Tags</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="list">
+            <ExpenseList />
+          </TabsContent>
+          
+          <TabsContent value="tags">
+            <TagManager />
+          </TabsContent>
+        </Tabs>
         
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogContent>

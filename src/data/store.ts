@@ -21,10 +21,18 @@ interface StoreState extends AppState {
   addPaymentMethod: (method: string) => void;
   updatePaymentMethod: (oldMethod: string, newMethod: string) => void;
   removePaymentMethod: (method: string) => void;
+  
+  // Tag actions
+  addExpenseTag: (tag: string) => void;
+  updateExpenseTag: (oldTag: string, newTag: string) => void;
+  removeExpenseTag: (tag: string) => void;
 }
 
 // Predefined payment methods
 const defaultPaymentMethods = ['cash', 'credit', 'debit', 'pix', 'other'];
+
+// Predefined expense tags
+const defaultExpenseTags = ['food', 'supplies', 'maintenance', 'utilities', 'rent', 'taxes', 'other'];
 
 export const useStore = create<StoreState>()(
   persist(
@@ -33,6 +41,7 @@ export const useStore = create<StoreState>()(
       sales: [],
       expenses: [],
       paymentMethods: defaultPaymentMethods,
+      expenseTags: defaultExpenseTags,
       
       // Product actions
       addProduct: (product) => 
@@ -141,6 +150,59 @@ export const useStore = create<StoreState>()(
           
           return {
             paymentMethods: state.paymentMethods.filter(m => m !== method)
+          };
+        }),
+        
+      // Tag actions
+      addExpenseTag: (tag) =>
+        set((state) => ({
+          expenseTags: state.expenseTags.includes(tag) 
+            ? state.expenseTags 
+            : [...state.expenseTags, tag]
+        })),
+        
+      updateExpenseTag: (oldTag, newTag) =>
+        set((state) => {
+          // Don't update if the new tag already exists
+          if (state.expenseTags.includes(newTag) && oldTag !== newTag) {
+            return { expenseTags: state.expenseTags };
+          }
+          
+          // Update the tag
+          return {
+            expenseTags: state.expenseTags.map(tag => 
+              tag === oldTag ? newTag : tag
+            ),
+            // Also update tag in existing expenses
+            expenses: state.expenses.map(expense => 
+              expense.tags?.includes(oldTag) 
+                ? { 
+                    ...expense, 
+                    tags: expense.tags.map(t => t === oldTag ? newTag : t) 
+                  } 
+                : expense
+            )
+          };
+        }),
+        
+      removeExpenseTag: (tag) =>
+        set((state) => {
+          // Don't remove default tags
+          if (defaultExpenseTags.includes(tag)) {
+            return { expenseTags: state.expenseTags };
+          }
+          
+          return {
+            expenseTags: state.expenseTags.filter(t => t !== tag),
+            // Also remove the tag from any expenses that were using it
+            expenses: state.expenses.map(expense => 
+              expense.tags?.includes(tag)
+                ? {
+                    ...expense,
+                    tags: expense.tags.filter(t => t !== tag)
+                  }
+                : expense
+            )
           };
         }),
     }),

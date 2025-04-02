@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Edit, Trash, CalendarRange } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import ExpenseForm from './ExpenseForm';
+import ExpenseFormWithTags from './ExpenseFormWithTags';
 import { Expense } from '../../data/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -32,6 +32,7 @@ const ExpenseList = () => {
                 <TableHead>Descrição</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead>Categoria</TableHead>
+                <TableHead className="hidden md:table-cell">Tags</TableHead>
                 <TableHead className="hidden md:table-cell">Data</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -61,6 +62,15 @@ const ExpenseList = () => {
                     <Badge variant={expense.category === 'fixed' ? 'secondary' : 'outline'}>
                       {expense.category === 'fixed' ? 'Fixa' : 'Variável'}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex flex-wrap gap-1">
+                      {expense.tags?.map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
                     {format(new Date(expense.date), "dd/MM/yyyy HH:mm", { locale: ptBR })}
@@ -120,7 +130,7 @@ const ExpenseList = () => {
             <DialogTitle>Editar Despesa</DialogTitle>
           </DialogHeader>
           {editingExpense && (
-            <ExpenseForm expense={editingExpense} onSave={() => setEditingExpense(null)} />
+            <ExpenseFormWithTags expense={editingExpense} onSave={() => setEditingExpense(null)} />
           )}
         </DialogContent>
       </Dialog>

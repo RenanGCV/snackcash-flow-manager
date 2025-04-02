@@ -27,6 +27,7 @@ export interface Expense {
   date: Date;
   isRecurring?: boolean;
   recurrenceDay?: number;
+  tags?: string[]; // Adding tags for expense categorization
 }
 
 export type PaymentMethod = 'cash' | 'credit' | 'debit' | 'pix' | 'other' | string;
@@ -36,4 +37,5 @@ export interface AppState {
   sales: Sale[];
   expenses: Expense[];
   paymentMethods: string[];
+  expenseTags: string[]; // Adding expense tags to the app state
 }
