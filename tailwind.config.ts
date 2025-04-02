@@ -71,6 +71,10 @@ export default {
 					light: '#E8F5E9',
 					dark: '#333333',
 					background: '#FFFDF7'
+				},
+				success: {
+					DEFAULT: '#10b981',
+					foreground: '#ffffff'
 				}
 			},
 			borderRadius: {

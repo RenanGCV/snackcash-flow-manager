@@ -233,7 +233,7 @@ const Reports = () => {
                     <TrendingUp className="h-4 w-4" />
                     Total de Vendas 
                     {monthlyComparison.salesGrowth !== 0 && (
-                      <Badge variant={monthlyComparison.salesGrowth > 0 ? "success" : "destructive"} className="ml-2">
+                      <Badge variant={monthlyComparison.salesGrowth > 0 ? "outline" : "destructive"} className={`ml-2 ${monthlyComparison.salesGrowth > 0 ? 'text-green-600 border-green-600' : ''}`}>
                         {monthlyComparison.salesGrowth > 0 ? '+' : ''}{monthlyComparison.salesGrowth}%
                       </Badge>
                     )}
@@ -245,7 +245,7 @@ const Reports = () => {
                     <TrendingDown className="h-4 w-4" />
                     Total de Despesas
                     {monthlyComparison.expensesGrowth !== 0 && (
-                      <Badge variant={monthlyComparison.expensesGrowth < 0 ? "success" : "destructive"} className="ml-2">
+                      <Badge variant={monthlyComparison.expensesGrowth < 0 ? "outline" : "destructive"} className={`ml-2 ${monthlyComparison.expensesGrowth < 0 ? 'text-green-600 border-green-600' : ''}`}>
                         {monthlyComparison.expensesGrowth > 0 ? '+' : ''}{monthlyComparison.expensesGrowth}%
                       </Badge>
                     )}
@@ -257,7 +257,7 @@ const Reports = () => {
                     <FileText className="h-4 w-4" />
                     Lucro Mensal
                     {monthlyComparison.profitGrowth !== 0 && (
-                      <Badge variant={monthlyComparison.profitGrowth > 0 ? "success" : "destructive"} className="ml-2">
+                      <Badge variant={monthlyComparison.profitGrowth > 0 ? "outline" : "destructive"} className={`ml-2 ${monthlyComparison.profitGrowth > 0 ? 'text-green-600 border-green-600' : ''}`}>
                         {monthlyComparison.profitGrowth > 0 ? '+' : ''}{monthlyComparison.profitGrowth}%
                       </Badge>
                     )}
