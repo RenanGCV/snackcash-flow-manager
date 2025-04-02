@@ -3,6 +3,8 @@ import { useStore } from '../data/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Sale } from '../data/types';
+import { ShoppingBag, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 
 const Dashboard = () => {
   const { products, sales, expenses } = useStore();
@@ -137,7 +139,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-import { ShoppingBag, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 
 export default Dashboard;
