@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state change event:', event);
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
@@ -32,8 +33,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session ? 'Session found' : 'No session');
       setSession(session);
       setUser(session?.user ?? null);
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Error checking session:', error);
       setIsLoading(false);
     });
 
@@ -42,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log('Attempting to sign in with:', email);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -50,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       toast.success('Login realizado com sucesso!');
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast.error(error.message || 'Erro ao fazer login');
       throw error;
     }
@@ -57,6 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
+      console.log('Attempting to sign up with:', email);
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -68,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       toast.success('Conta criada com sucesso! Verifique seu email.');
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast.error(error.message || 'Erro ao criar conta');
       throw error;
     }
@@ -75,10 +84,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      console.log('Attempting to sign out');
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success('Você saiu da sua conta');
     } catch (error: any) {
+      console.error('Sign out error:', error);
       toast.error(error.message || 'Erro ao sair');
     }
   };

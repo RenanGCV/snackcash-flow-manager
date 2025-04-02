@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -31,7 +31,15 @@ const Auth = () => {
   const { user, signIn, signUp, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // For debugging
+  useEffect(() => {
+    console.log('Auth component loaded');
+    console.log('User:', user);
+    console.log('IsLoading:', isLoading);
+  }, [user, isLoading]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -52,24 +60,30 @@ const Auth = () => {
   });
 
   const onLoginSubmit = async (values: LoginFormValues) => {
+    console.log('Login submit with values:', values);
+    setError(null);
     setIsSubmitting(true);
     try {
       await signIn(values.email, values.password);
       navigate('/');
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setError(err.message || 'Erro desconhecido ao fazer login');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const onSignupSubmit = async (values: SignupFormValues) => {
+    console.log('Signup submit with values:', values);
+    setError(null);
     setIsSubmitting(true);
     try {
       await signUp(values.email, values.password, values.name);
       setActiveTab('login');
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      console.error('Signup error:', err);
+      setError(err.message || 'Erro desconhecido ao criar conta');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,6 +91,7 @@ const Auth = () => {
 
   // Redirect if already logged in
   if (user && !isLoading) {
+    console.log('User is logged in, redirecting to /');
     return <Navigate to="/" />;
   }
 
@@ -89,6 +104,12 @@ const Auth = () => {
           </h1>
           <p className="text-muted-foreground">Gestão Simples para Lanchonetes</p>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
 
         <Tabs
           defaultValue="login"
