@@ -19,8 +19,8 @@ export interface StoreState extends AppState {
   deleteSale: (id: string) => void;
   
   // Expense actions
-  addExpense: (expense: Omit<Expense, 'id' | 'date'>) => void;
-  updateExpense: (id: string, updates: Partial<Omit<Expense, 'id' | 'date'>>) => void;
+  addExpense: (expense: Omit<Expense, 'id' | 'date'> & { tags?: string[] }) => void;
+  updateExpense: (id: string, updates: Partial<Omit<Expense, 'id' | 'date'> & { tags?: string[] }>) => void;
   deleteExpense: (id: string) => void;
   
   // Payment method actions

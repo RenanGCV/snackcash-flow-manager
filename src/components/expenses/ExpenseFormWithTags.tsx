@@ -15,7 +15,7 @@ interface ExpenseFormWithTagsProps {
 }
 
 const ExpenseFormWithTags = ({ expense, onSave }: ExpenseFormWithTagsProps) => {
-  const { expenseTags, updateExpense } = useStore();
+  const { expenseTags, updateExpense, addExpense } = useStore();
   const [selectedTags, setSelectedTags] = useState<string[]>(expense?.tags || []);
   const [category, setCategory] = useState<'fixed' | 'variable'>(expense?.category || 'variable');
   
@@ -34,6 +34,13 @@ const ExpenseFormWithTags = ({ expense, onSave }: ExpenseFormWithTagsProps) => {
     // If this is an edit (expense already exists), update with tags
     if (expense) {
       updateExpense(expense.id, { tags: selectedTags });
+    } else {
+      // For new expenses, we use a custom add function that includes tags
+      const { id, date, user_id, ...expenseData } = savedExpense;
+      addExpense({
+        ...expenseData,
+        tags: selectedTags
+      });
     }
     
     onSave();
