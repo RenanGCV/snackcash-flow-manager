@@ -11,6 +11,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, LineChart, Line, Pie, PieChart, Cell } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ChartBar, ChartPie, TrendingUp, TrendingDown, Tag, FileText, Calendar } from 'lucide-react';
 
 const Reports = () => {
   const { sales, expenses, products } = useStore();
@@ -55,6 +56,9 @@ const Reports = () => {
   }, [filteredExpenses]);
 
   const monthlyProfit = totalSales - totalExpenses;
+  const profitPercentage = totalSales > 0 
+    ? ((monthlyProfit / totalSales) * 100).toFixed(1) 
+    : '0';
 
   // Calculate top selling products
   const productSalesData = useMemo(() => {
@@ -108,6 +112,11 @@ const Reports = () => {
       .sort((a, b) => b.amount - a.amount);
   }, [filteredExpenses]);
 
+  // Top expense categories
+  const topExpenseTags = useMemo(() => {
+    return expensesByTag.slice(0, 5);
+  }, [expensesByTag]);
+
   // Daily sales data for charts
   const dailySalesData = useMemo(() => {
     const daysInMonth = new Array(31).fill(0).map((_, i) => i + 1);
@@ -127,6 +136,46 @@ const Reports = () => {
     return Array.from(dailyMap.entries())
       .map(([day, value]) => ({ day, value }));
   }, [filteredSales, periodEnd]);
+
+  // Monthly comparison data
+  const monthlyComparison = useMemo(() => {
+    // Get data for previous month
+    const previousMonthStart = startOfMonth(addMonths(periodStart, -1));
+    const previousMonthEnd = endOfMonth(addMonths(periodStart, -1));
+    
+    const previousMonthSales = sales.filter(sale => {
+      const saleDate = new Date(sale.date);
+      return isWithinInterval(saleDate, { start: previousMonthStart, end: previousMonthEnd });
+    });
+    
+    const previousMonthExpenses = expenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      return isWithinInterval(expenseDate, { start: previousMonthStart, end: previousMonthEnd });
+    });
+    
+    const prevTotalSales = previousMonthSales.reduce((sum, sale) => sum + sale.total, 0);
+    const prevTotalExpenses = previousMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const prevProfit = prevTotalSales - prevTotalExpenses;
+    
+    // Calculate growth percentages
+    const salesGrowth = prevTotalSales > 0 
+      ? ((totalSales - prevTotalSales) / prevTotalSales * 100).toFixed(1) 
+      : totalSales > 0 ? '100' : '0';
+    
+    const expensesGrowth = prevTotalExpenses > 0 
+      ? ((totalExpenses - prevTotalExpenses) / prevTotalExpenses * 100).toFixed(1) 
+      : totalExpenses > 0 ? '100' : '0';
+    
+    const profitGrowth = prevProfit > 0 
+      ? ((monthlyProfit - prevProfit) / prevProfit * 100).toFixed(1) 
+      : monthlyProfit > 0 ? '100' : '0';
+    
+    return {
+      salesGrowth: Number(salesGrowth),
+      expensesGrowth: Number(expensesGrowth),
+      profitGrowth: Number(profitGrowth),
+    };
+  }, [sales, expenses, periodStart, totalSales, totalExpenses, monthlyProfit]);
 
   // Generate months for select dropdown
   const monthOptions = useMemo(() => {
@@ -172,22 +221,50 @@ const Reports = () => {
         <div className="grid gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl capitalize">Resumo do mês: {monthTitle}</CardTitle>
+              <CardTitle className="text-xl capitalize flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Resumo do mês: {monthTitle}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
-                  <div className="text-muted-foreground text-sm">Total de Vendas</div>
+                  <div className="text-muted-foreground text-sm flex items-center gap-1">
+                    <TrendingUp className="h-4 w-4" />
+                    Total de Vendas 
+                    {monthlyComparison.salesGrowth !== 0 && (
+                      <Badge variant={monthlyComparison.salesGrowth > 0 ? "success" : "destructive"} className="ml-2">
+                        {monthlyComparison.salesGrowth > 0 ? '+' : ''}{monthlyComparison.salesGrowth}%
+                      </Badge>
+                    )}
+                  </div>
                   <div className="text-2xl font-bold text-green-600">R$ {totalSales.toFixed(2)}</div>
                 </div>
                 <div className="space-y-2">
-                  <div className="text-muted-foreground text-sm">Total de Despesas</div>
+                  <div className="text-muted-foreground text-sm flex items-center gap-1">
+                    <TrendingDown className="h-4 w-4" />
+                    Total de Despesas
+                    {monthlyComparison.expensesGrowth !== 0 && (
+                      <Badge variant={monthlyComparison.expensesGrowth < 0 ? "success" : "destructive"} className="ml-2">
+                        {monthlyComparison.expensesGrowth > 0 ? '+' : ''}{monthlyComparison.expensesGrowth}%
+                      </Badge>
+                    )}
+                  </div>
                   <div className="text-2xl font-bold text-red-600">R$ {totalExpenses.toFixed(2)}</div>
                 </div>
                 <div className="space-y-2">
-                  <div className="text-muted-foreground text-sm">Lucro Mensal</div>
-                  <div className={`text-2xl font-bold ${monthlyProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <div className="text-muted-foreground text-sm flex items-center gap-1">
+                    <FileText className="h-4 w-4" />
+                    Lucro Mensal
+                    {monthlyComparison.profitGrowth !== 0 && (
+                      <Badge variant={monthlyComparison.profitGrowth > 0 ? "success" : "destructive"} className="ml-2">
+                        {monthlyComparison.profitGrowth > 0 ? '+' : ''}{monthlyComparison.profitGrowth}%
+                      </Badge>
+                    )}
+                  </div>
+                  <div className={`text-2xl font-bold flex items-baseline gap-2 ${monthlyProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     R$ {monthlyProfit.toFixed(2)}
+                    <span className="text-sm font-normal">({profitPercentage}% das vendas)</span>
                   </div>
                 </div>
               </div>
@@ -196,15 +273,27 @@ const Reports = () => {
 
           <Tabs defaultValue="overview">
             <TabsList className="w-full sm:w-auto">
-              <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-              <TabsTrigger value="products">Produtos</TabsTrigger>
-              <TabsTrigger value="expenses">Despesas</TabsTrigger>
+              <TabsTrigger value="overview" className="flex items-center gap-1">
+                <ChartBar className="h-4 w-4" />
+                Visão Geral
+              </TabsTrigger>
+              <TabsTrigger value="products" className="flex items-center gap-1">
+                <TrendingUp className="h-4 w-4" />
+                Produtos
+              </TabsTrigger>
+              <TabsTrigger value="expenses" className="flex items-center gap-1">
+                <Tag className="h-4 w-4" />
+                Despesas
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Vendas Diárias</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <ChartBar className="h-5 w-5" />
+                    Vendas Diárias
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-80">
@@ -226,7 +315,10 @@ const Reports = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Produtos Mais Vendidos</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Produtos Mais Vendidos
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="h-64">
@@ -247,7 +339,10 @@ const Reports = () => {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Despesas por Tag</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <ChartPie className="h-5 w-5" />
+                      Despesas por Tag
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="h-64">
@@ -286,7 +381,13 @@ const Reports = () => {
             <TabsContent value="products">
               <Card>
                 <CardHeader>
-                  <CardTitle>Produtos Vendidos</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    Produtos Vendidos
+                  </CardTitle>
+                  <CardDescription>
+                    Detalhamento dos produtos vendidos neste mês, ordenados por quantidade.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {productSalesData.length > 0 ? (
@@ -296,6 +397,7 @@ const Reports = () => {
                           <TableHead>Produto</TableHead>
                           <TableHead className="text-right">Quantidade</TableHead>
                           <TableHead className="text-right">Valor Total</TableHead>
+                          <TableHead className="text-right">% do Faturamento</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -304,6 +406,9 @@ const Reports = () => {
                             <TableCell className="font-medium">{product.name}</TableCell>
                             <TableCell className="text-right">{product.quantity}</TableCell>
                             <TableCell className="text-right">R$ {product.total.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">
+                              {totalSales > 0 ? ((product.total / totalSales) * 100).toFixed(1) : 0}%
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -317,10 +422,81 @@ const Reports = () => {
               </Card>
             </TabsContent>
 
-            <TabsContent value="expenses">
+            <TabsContent value="expenses" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Despesas do Mês</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Tag className="h-5 w-5" />
+                    Despesas por Categoria
+                  </CardTitle>
+                  <CardDescription>
+                    Análise das despesas agrupadas por tags neste mês
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {topExpenseTags.length > 0 ? (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="h-64">
+                        <ChartContainer config={{}}>
+                          <PieChart>
+                            <Pie
+                              data={topExpenseTags}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="amount"
+                              nameKey="tag"
+                            >
+                              {topExpenseTags.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <ChartTooltip content={<ChartTooltipContent nameKey="tag" labelKey="amount" />} />
+                          </PieChart>
+                        </ChartContainer>
+                      </div>
+                      <div>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Tag</TableHead>
+                              <TableHead className="text-right">Valor</TableHead>
+                              <TableHead className="text-right">% do Total</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {topExpenseTags.map((tag) => (
+                              <TableRow key={tag.tag}>
+                                <TableCell className="font-medium">
+                                  <Badge variant="outline">{tag.tag}</Badge>
+                                </TableCell>
+                                <TableCell className="text-right">R$ {tag.amount.toFixed(2)}</TableCell>
+                                <TableCell className="text-right">
+                                  {totalExpenses > 0 ? ((tag.amount / totalExpenses) * 100).toFixed(1) : 0}%
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-muted-foreground">Nenhuma despesa registrada neste mês</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Detalhamento das Despesas
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {filteredExpenses.length > 0 ? (
@@ -331,6 +507,7 @@ const Reports = () => {
                           <TableHead>Categoria</TableHead>
                           <TableHead>Tags</TableHead>
                           <TableHead className="text-right">Valor</TableHead>
+                          <TableHead className="text-right">% do Total</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -355,6 +532,9 @@ const Reports = () => {
                               </div>
                             </TableCell>
                             <TableCell className="text-right">R$ {expense.amount.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">
+                              {totalExpenses > 0 ? ((expense.amount / totalExpenses) * 100).toFixed(1) : 0}%
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
