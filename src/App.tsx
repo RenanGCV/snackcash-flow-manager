@@ -11,10 +11,11 @@ import Expenses from "./pages/Expenses";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
+import { useState } from "react";
 
 const App = () => {
-  // Move QueryClient initialization inside the component
-  const queryClient = new QueryClient();
+  // Create a client inside the component with useState
+  const [queryClient] = useState(() => new QueryClient());
   
   return (
     <QueryClientProvider client={queryClient}>
