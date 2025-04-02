@@ -25,12 +25,15 @@ export interface Expense {
   amount: number;
   category: 'fixed' | 'variable';
   date: Date;
+  isRecurring?: boolean;
+  recurrenceDay?: number;
 }
 
-export type PaymentMethod = 'cash' | 'credit' | 'debit' | 'pix' | 'other';
+export type PaymentMethod = 'cash' | 'credit' | 'debit' | 'pix' | 'other' | string;
 
 export interface AppState {
   products: Product[];
   sales: Sale[];
   expenses: Expense[];
+  paymentMethods: string[];
 }

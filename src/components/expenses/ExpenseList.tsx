@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useStore } from '../../data/store';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash } from 'lucide-react';
+import { Edit, Trash, CalendarRange } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ExpenseForm from './ExpenseForm';
 import { Expense } from '../../data/types';
@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const ExpenseList = () => {
   const { expenses, deleteExpense } = useStore();
@@ -38,7 +39,23 @@ const ExpenseList = () => {
             <TableBody>
               {expenses.map((expense) => (
                 <TableRow key={expense.id}>
-                  <TableCell className="font-medium">{expense.description}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      {expense.description}
+                      {expense.isRecurring && expense.recurrenceDay && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <CalendarRange className="h-4 w-4 text-muted-foreground" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Despesa recorrente: dia {expense.recurrenceDay} de cada mês</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>R$ {expense.amount.toFixed(2)}</TableCell>
                   <TableCell>
                     <Badge variant={expense.category === 'fixed' ? 'secondary' : 'outline'}>

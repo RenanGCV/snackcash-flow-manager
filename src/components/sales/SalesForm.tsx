@@ -12,14 +12,16 @@ import { PaymentMethod } from '../../data/types';
 import { Trash, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 
-const paymentMethods = [
-  { value: 'cash', label: 'Dinheiro' },
-  { value: 'credit', label: 'Cartão de Crédito' },
-  { value: 'debit', label: 'Cartão de Débito' },
-  { value: 'pix', label: 'Pix' },
-  { value: 'other', label: 'Outro' },
-];
+// Mapeamento de valores para labels das formas de pagamento
+const paymentMethodLabels: Record<string, string> = {
+  'cash': 'Dinheiro',
+  'credit': 'Cartão de Crédito',
+  'debit': 'Cartão de Débito',
+  'pix': 'Pix',
+  'other': 'Outro',
+};
 
 interface SaleItem {
   productId: string;
@@ -27,15 +29,17 @@ interface SaleItem {
 }
 
 const formSchema = z.object({
-  paymentMethod: z.enum(['cash', 'credit', 'debit', 'pix', 'other'] as const),
+  paymentMethod: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 const SalesForm = () => {
-  const { products, addSale } = useStore();
+  const { products, addSale, paymentMethods, addPaymentMethod } = useStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [items, setItems] = useState<SaleItem[]>([{ productId: '', quantity: 1 }]);
+  const [newPaymentMethod, setNewPaymentMethod] = useState('');
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -65,6 +69,17 @@ const SalesForm = () => {
       const product = products.find(p => p.id === item.productId);
       return total + (product ? product.price * item.quantity : 0);
     }, 0);
+  };
+  
+  const handleAddPaymentMethod = () => {
+    if (newPaymentMethod.trim()) {
+      addPaymentMethod(newPaymentMethod.trim());
+      toast.success(`Forma de pagamento "${newPaymentMethod}" adicionada com sucesso!`);
+      setNewPaymentMethod('');
+      setIsPaymentDialogOpen(false);
+    } else {
+      toast.error('O nome da forma de pagamento não pode estar vazio.');
+    }
   };
   
   const onSubmit = async (values: FormValues) => {
@@ -98,6 +113,11 @@ const SalesForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+  
+  // Função para obter o label de uma forma de pagamento
+  const getPaymentMethodLabel = (method: string) => {
+    return paymentMethodLabels[method] || method;
   };
   
   return (
@@ -178,20 +198,47 @@ const SalesForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Forma de pagamento</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione uma forma de pagamento" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {paymentMethods.map((method) => (
-                        <SelectItem key={method.value} value={method.value}>
-                          {method.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex gap-2">
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder="Selecione uma forma de pagamento" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {paymentMethods.map((method) => (
+                          <SelectItem key={method} value={method}>
+                            {getPaymentMethodLabel(method)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button type="button" variant="outline" size="icon">
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Adicionar Forma de Pagamento</DialogTitle>
+                        </DialogHeader>
+                        <div className="py-4">
+                          <FormItem>
+                            <FormLabel>Nome da forma de pagamento</FormLabel>
+                            <Input
+                              placeholder="Ex: Voucher, Transferência"
+                              value={newPaymentMethod}
+                              onChange={(e) => setNewPaymentMethod(e.target.value)}
+                            />
+                          </FormItem>
+                        </div>
+                        <DialogFooter>
+                          <Button type="button" onClick={handleAddPaymentMethod}>Adicionar</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

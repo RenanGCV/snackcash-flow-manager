@@ -16,7 +16,14 @@ interface StoreState extends AppState {
   addExpense: (expense: Omit<Expense, 'id' | 'date'>) => void;
   updateExpense: (id: string, updates: Partial<Omit<Expense, 'id' | 'date'>>) => void;
   deleteExpense: (id: string) => void;
+  
+  // Payment method actions
+  addPaymentMethod: (method: string) => void;
+  removePaymentMethod: (method: string) => void;
 }
+
+// Predefined payment methods
+const defaultPaymentMethods = ['cash', 'credit', 'debit', 'pix', 'other'];
 
 export const useStore = create<StoreState>()(
   persist(
@@ -24,6 +31,7 @@ export const useStore = create<StoreState>()(
       products: [],
       sales: [],
       expenses: [],
+      paymentMethods: defaultPaymentMethods,
       
       // Product actions
       addProduct: (product) => 
@@ -92,6 +100,19 @@ export const useStore = create<StoreState>()(
       deleteExpense: (id) => 
         set((state) => ({
           expenses: state.expenses.filter(expense => expense.id !== id)
+        })),
+        
+      // Payment method actions
+      addPaymentMethod: (method) =>
+        set((state) => ({
+          paymentMethods: state.paymentMethods.includes(method) 
+            ? state.paymentMethods 
+            : [...state.paymentMethods, method]
+        })),
+        
+      removePaymentMethod: (method) =>
+        set((state) => ({
+          paymentMethods: state.paymentMethods.filter(m => m !== method)
         })),
     }),
     {
