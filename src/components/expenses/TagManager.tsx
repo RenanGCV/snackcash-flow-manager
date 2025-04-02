@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useStore } from '../../data/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ const TagManager = () => {
   const [newTag, setNewTag] = useState('');
   const [editingTag, setEditingTag] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [tagToDelete, setTagToDelete] = useState<string | null>(null);
   
   const handleAddTag = () => {
     if (newTag.trim() === '') {
@@ -45,9 +46,12 @@ const TagManager = () => {
     }
   };
   
-  const handleDeleteTag = (tag: string) => {
-    removeExpenseTag(tag);
-    toast.success('Tag removida com sucesso!');
+  const handleDeleteTag = () => {
+    if (tagToDelete) {
+      removeExpenseTag(tagToDelete);
+      setTagToDelete(null);
+      toast.success('Tag removida com sucesso!');
+    }
   };
   
   return (
@@ -111,9 +115,14 @@ const TagManager = () => {
                         <Edit className="h-3 w-3" />
                       </Button>
                       
-                      <AlertDialog>
+                      <AlertDialog open={tagToDelete === tag} onOpenChange={(open) => !open && setTagToDelete(null)}>
                         <AlertDialogTrigger asChild>
-                          <Button size="icon" variant="ghost" className="h-5 w-5">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="h-5 w-5"
+                            onClick={() => setTagToDelete(tag)}
+                          >
                             <Trash className="h-3 w-3" />
                           </Button>
                         </AlertDialogTrigger>
@@ -125,8 +134,8 @@ const TagManager = () => {
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteTag(tag)}>
+                            <AlertDialogCancel onClick={() => setTagToDelete(null)}>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleDeleteTag}>
                               Remover
                             </AlertDialogAction>
                           </AlertDialogFooter>
