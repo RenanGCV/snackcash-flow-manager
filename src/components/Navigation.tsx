@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ShoppingBag, DollarSign, Receipt } from 'lucide-react';
+import { Home, ShoppingBag, DollarSign, Receipt, FileText } from 'lucide-react';
 
 const Navigation = () => {
   const location = useLocation();
@@ -10,6 +10,7 @@ const Navigation = () => {
     { path: '/products', label: 'Produtos', icon: ShoppingBag },
     { path: '/sales', label: 'Vendas', icon: Receipt },
     { path: '/expenses', label: 'Despesas', icon: DollarSign },
+    { path: '/reports', label: 'Relatórios', icon: FileText },
   ];
   
   return (
