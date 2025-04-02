@@ -30,7 +30,7 @@ const ExpenseFormWithTags = ({ expense, onSave }: ExpenseFormWithTagsProps) => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
   
-  const handleSaveWithTags = (_savedExpense: Expense) => {
+  const handleSaveWithTags = (savedExpense: Expense) => {
     // If this is an edit (expense already exists), update with tags
     if (expense) {
       updateExpense(expense.id, { tags: selectedTags });
