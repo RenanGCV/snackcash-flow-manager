@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
+# Bem-vindo ao seu projeto Lovable
 
-## Project info
+## Sobre o projeto
 
-**URL**: https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1
+Este projeto foi desenvolvido utilizando a IDE **Lovable**, com o auxílio de **Inteligência Artificial**. A proposta do aplicativo é fornecer uma solução simples e eficiente para **fluxo de caixa**, voltado especialmente para **lanchonetes** e outros **comércios**.
 
-## How can I edit this code?
+O projeto é **de código aberto** e pode ser usado e editado livremente. Apenas pedimos que mantenham os devidos créditos ao desenvolvedor original:
 
-There are several ways of editing your application.
+**Renan Teodoro Lopes Gonçalves**
 
-**Use Lovable**
+## Informações do projeto
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1) and start prompting.
+**URL**: [https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1)
 
-Changes made via Lovable will be committed automatically to this repo.
+## Como posso editar este código?
 
-**Use your preferred IDE**
+Existem várias maneiras de editar sua aplicação.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### **Usando o Lovable**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Basta acessar o [Projeto Lovable](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1) e começar a fazer alterações.
 
-Follow these steps:
+As mudanças feitas pelo Lovable serão automaticamente enviadas para este repositório.
+
+### **Usando seu IDE preferido**
+
+Se preferir trabalhar localmente com seu próprio IDE, você pode clonar este repositório e enviar as alterações. As mudanças enviadas também serão refletidas no Lovable.
+
+O único requisito é ter Node.js e npm instalados - [instale com nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+Siga estes passos:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Passo 1: Clone o repositório usando a URL do Git do projeto.
+git clone <SUA_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Passo 2: Acesse o diretório do projeto.
+cd <SEU_NOME_DE_PROJETO>
 
-# Step 3: Install the necessary dependencies.
+# Passo 3: Instale as dependências necessárias.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Passo 4: Inicie o servidor de desenvolvimento com recarregamento automático e visualização instantânea.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### **Editando um arquivo diretamente no GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Acesse o(s) arquivo(s) desejado(s).
+2. Clique no botão "Editar" (ícone de lápis) no canto superior direito da visualização do arquivo.
+3. Faça suas alterações e confirme as mudanças.
 
-**Use GitHub Codespaces**
+### **Usando o GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Vá até a página principal do seu repositório.
+2. Clique no botão "Code" (botão verde) no canto superior direito.
+3. Selecione a guia "Codespaces".
+4. Clique em "New codespace" para iniciar um novo ambiente Codespace.
+5. Edite os arquivos diretamente no Codespace e confirme/envie suas alterações quando terminar.
 
-## What technologies are used for this project?
+## Quais tecnologias são usadas neste projeto?
 
-This project is built with:
+Este projeto foi desenvolvido com:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- Vite  
+- TypeScript  
+- React  
+- shadcn-ui  
+- Tailwind CSS  
 
-## How can I deploy this project?
+## Como posso implantar este projeto?
 
-Simply open [Lovable](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1) and click on Share -> Publish.
+Basta abrir o [Lovable](https://lovable.dev/projects/58f31cbf-6aea-4b88-a16f-9dcd7e538af1) e clicar em **Compartilhar -> Publicar**.
 
-## Can I connect a custom domain to my Lovable project?
+## Posso conectar um domínio personalizado ao meu projeto Lovable?
 
-Yes it is!
+Sim!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Para conectar um domínio, vá até **Projeto > Configurações > Domínios** e clique em **Conectar Domínio**.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Saiba mais aqui: [Configurando um domínio personalizado](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide).
