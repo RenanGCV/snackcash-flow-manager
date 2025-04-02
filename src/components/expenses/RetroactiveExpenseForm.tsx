@@ -32,7 +32,7 @@ const RetroactiveExpenseForm = ({ onSave }: RetroactiveExpenseFormProps) => {
     addRetroactiveExpense(expenseData, date);
     
     toast.success('Despesa retroativa adicionada com sucesso!');
-    onSave?.();
+    if (onSave) onSave();
   };
   
   return (
