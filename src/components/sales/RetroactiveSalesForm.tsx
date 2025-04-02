@@ -14,6 +14,15 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
+// Payment method labels mapping
+const paymentMethodLabels: Record<string, string> = {
+  'cash': 'Dinheiro',
+  'credit': 'Cartão de Crédito',
+  'debit': 'Cartão de Débito',
+  'pix': 'Pix',
+  'other': 'Outro',
+};
+
 const RetroactiveSalesForm = () => {
   const { products, paymentMethods, addRetroactiveSale } = useStore();
   const [items, setItems] = useState<{ productId: string; quantity: number }[]>([{ productId: '', quantity: 1 }]);
@@ -56,6 +65,11 @@ const RetroactiveSalesForm = () => {
     newItems[index].productId = productId;
     setItems(newItems);
     setTotal(calculateTotal(newItems));
+  };
+
+  // Function to get the label for a payment method
+  const getPaymentMethodLabel = (method: string) => {
+    return paymentMethodLabels[method] || method;
   };
 
   const handleSubmit = () => {
@@ -173,7 +187,7 @@ const RetroactiveSalesForm = () => {
               <SelectContent>
                 {paymentMethods.map((method) => (
                   <SelectItem key={method} value={method}>
-                    {method}
+                    {getPaymentMethodLabel(method)}
                   </SelectItem>
                 ))}
               </SelectContent>
