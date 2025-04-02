@@ -4,5 +4,6 @@
 // Predefined payment methods
 export const defaultPaymentMethods = ['cash', 'credit', 'debit', 'pix', 'other'];
 
-// Predefined expense tags
-export const defaultExpenseTags = ['food', 'supplies', 'maintenance', 'utilities', 'rent', 'taxes', 'other'];
+// Empty predefined expense tags
+export const defaultExpenseTags = [];
+

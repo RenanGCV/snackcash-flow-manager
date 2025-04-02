@@ -36,11 +36,7 @@ export const createTagActions = (set: (fn: (state: StoreState) => Partial<StoreS
     
   removeExpenseTag: (tag: string) =>
     set((state) => {
-      // Don't remove default tags
-      if (defaultExpenseTags.includes(tag)) {
-        return { expenseTags: state.expenseTags };
-      }
-      
+      // Removed the check for default tags since we no longer want to protect them
       return {
         expenseTags: state.expenseTags.filter(t => t !== tag),
         // Also remove the tag from any expenses that were using it
