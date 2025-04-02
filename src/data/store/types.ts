@@ -20,6 +20,7 @@ export interface StoreState extends AppState {
   
   // Expense actions
   addExpense: (expense: Omit<Expense, 'id' | 'date'> & { tags?: string[] }) => void;
+  addRetroactiveExpense: (expense: Omit<Expense, 'id' | 'date'> & { tags?: string[] }, customDate: Date) => void;
   updateExpense: (id: string, updates: Partial<Omit<Expense, 'id' | 'date'> & { tags?: string[] }>) => void;
   deleteExpense: (id: string) => void;
   
