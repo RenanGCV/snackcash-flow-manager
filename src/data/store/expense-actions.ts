@@ -3,20 +3,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { StoreState } from './types';
 
 export const createExpenseActions = (set: (fn: (state: StoreState) => Partial<StoreState>) => void) => ({
-  addExpense: (expense: any) => 
-    set((state) => {
-      const userId = supabase.auth.getSession()
-        .then(res => res.data?.session?.user?.id || null);
+  addExpense: async (expense: any) => {
+    try {
+      // First get the user ID
+      const { data } = await supabase.auth.getSession();
+      const userId = data?.session?.user?.id || null;
       
-      return {
+      // Then update the state
+      set((state) => ({
         expenses: [...state.expenses, {
           ...expense,
           id: crypto.randomUUID(),
           date: new Date(),
           user_id: userId
         }]
-      };
-    }),
+      }));
+    } catch (error) {
+      console.error("Error adding expense:", error);
+    }
+  },
   
   updateExpense: (id: string, updates: any) => 
     set((state) => ({

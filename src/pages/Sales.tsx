@@ -1,6 +1,7 @@
 
 import Layout from '../components/Layout';
 import SalesForm from '../components/sales/SalesForm';
+import RetroactiveSalesForm from '../components/sales/RetroactiveSalesForm';
 import PaymentMethodsManager from '../components/sales/PaymentMethodsManager';
 import { useStore } from '../data/store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,6 +22,7 @@ const Sales = () => {
         <Tabs defaultValue="register">
           <TabsList>
             <TabsTrigger value="register">Registrar Venda</TabsTrigger>
+            <TabsTrigger value="retroactive">Vendas Retroativas</TabsTrigger>
             <TabsTrigger value="payment-methods">Formas de Pagamento</TabsTrigger>
           </TabsList>
           
@@ -31,6 +33,21 @@ const Sales = () => {
               <div className="bg-white p-8 rounded-lg shadow text-center">
                 <p className="text-muted-foreground mb-4">
                   Você precisa cadastrar produtos antes de registrar vendas.
+                </p>
+                <a href="/products" className="text-snack hover:underline font-medium">
+                  Ir para cadastro de produtos
+                </a>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="retroactive">
+            {products.length > 0 ? (
+              <RetroactiveSalesForm />
+            ) : (
+              <div className="bg-white p-8 rounded-lg shadow text-center">
+                <p className="text-muted-foreground mb-4">
+                  Você precisa cadastrar produtos antes de registrar vendas retroativas.
                 </p>
                 <a href="/products" className="text-snack hover:underline font-medium">
                   Ir para cadastro de produtos

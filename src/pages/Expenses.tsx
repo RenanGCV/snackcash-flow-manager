@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Layout from '../components/Layout';
 import ExpenseList from '../components/expenses/ExpenseList';
-import ExpenseForm from '../components/expenses/ExpenseForm';
+import ExpenseFormWithTags from '../components/expenses/ExpenseFormWithTags';
 import TagManager from '../components/expenses/TagManager';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
@@ -48,7 +48,7 @@ const Expenses = () => {
             <DialogHeader>
               <DialogTitle>Adicionar Despesa</DialogTitle>
             </DialogHeader>
-            <ExpenseForm onSave={() => setIsAddDialogOpen(false)} />
+            <ExpenseFormWithTags onSave={() => setIsAddDialogOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
