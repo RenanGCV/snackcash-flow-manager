@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, LineChart, Line, Pie, PieChart, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChartBar, ChartPie, TrendingUp, TrendingDown, Tag, FileText, Calendar } from 'lucide-react';
@@ -191,7 +191,7 @@ const Reports = () => {
   }, []);
 
   // Colors for charts
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const COLORS = ['#9b87f5', '#7E69AB', '#6E59A5', '#0EA5E9', '#D946EF', '#F97316'];
 
   return (
     <Layout>
@@ -298,15 +298,15 @@ const Reports = () => {
                 <CardContent>
                   <div className="h-80">
                     <ChartContainer config={{
-                      sales: { label: 'Vendas', color: '#8884d8' }
+                      value: { label: 'Vendas', color: '#9b87f5' }
                     }}>
-                      <LineChart data={dailySalesData}>
+                      <BarChart data={dailySalesData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="day" />
                         <YAxis />
                         <ChartTooltip content={<ChartTooltipContent />} />
-                        <Line type="monotone" dataKey="value" stroke="#8884d8" name="sales" />
-                      </LineChart>
+                        <Bar dataKey="value" fill="#9b87f5" name="value" />
+                      </BarChart>
                     </ChartContainer>
                   </div>
                 </CardContent>
