@@ -19,6 +19,7 @@ interface StoreState extends AppState {
   
   // Payment method actions
   addPaymentMethod: (method: string) => void;
+  updatePaymentMethod: (oldMethod: string, newMethod: string) => void;
   removePaymentMethod: (method: string) => void;
 }
 
@@ -109,11 +110,39 @@ export const useStore = create<StoreState>()(
             ? state.paymentMethods 
             : [...state.paymentMethods, method]
         })),
+      
+      updatePaymentMethod: (oldMethod, newMethod) =>
+        set((state) => {
+          // Don't update if the new method already exists
+          if (state.paymentMethods.includes(newMethod) && oldMethod !== newMethod) {
+            return { paymentMethods: state.paymentMethods };
+          }
+          
+          // Update the payment method
+          return {
+            paymentMethods: state.paymentMethods.map(method => 
+              method === oldMethod ? newMethod : method
+            ),
+            // Also update payment method in existing sales
+            sales: state.sales.map(sale => 
+              sale.paymentMethod === oldMethod 
+                ? { ...sale, paymentMethod: newMethod } 
+                : sale
+            )
+          };
+        }),
         
       removePaymentMethod: (method) =>
-        set((state) => ({
-          paymentMethods: state.paymentMethods.filter(m => m !== method)
-        })),
+        set((state) => {
+          // Don't remove default payment methods
+          if (defaultPaymentMethods.includes(method)) {
+            return { paymentMethods: state.paymentMethods };
+          }
+          
+          return {
+            paymentMethods: state.paymentMethods.filter(m => m !== method)
+          };
+        }),
     }),
     {
       name: 'snackcash-storage'
