@@ -1,4 +1,4 @@
-# 🚀 Bem-vindo ao seu projeto Lovable
+# 🚀 Bem-vindo ao Snack Cash Flow Manager
 
 ## 📌 Sobre o projeto
 
