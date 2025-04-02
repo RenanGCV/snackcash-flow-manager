@@ -288,6 +288,7 @@ const Reports = () => {
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
+              {/* Grafico de Vendas Diarias - Ajustado para não sobrepor */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -296,24 +297,43 @@ const Reports = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
+                  <div className="h-80 w-full overflow-hidden">
                     <ChartContainer config={{
                       value: { label: 'Vendas', color: '#9b87f5' }
                     }}>
-                      <BarChart data={dailySalesData}>
+                      <BarChart 
+                        data={dailySalesData}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                      >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="day" />
-                        <YAxis />
+                        <XAxis 
+                          dataKey="day" 
+                          height={50}
+                          tick={{ fontSize: 12 }}
+                          tickMargin={10}
+                        />
+                        <YAxis 
+                          width={50}
+                          tick={{ fontSize: 12 }}
+                        />
                         <ChartTooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="value" fill="#9b87f5" name="value" />
+                        <Bar 
+                          dataKey="value" 
+                          fill="#9b87f5" 
+                          name="value"
+                          radius={[4, 4, 0, 0]}
+                          maxBarSize={40}
+                        />
                       </BarChart>
                     </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
 
+              {/* Gráficos de Produtos e Despesas */}
               <div className="grid gap-4 md:grid-cols-2">
-                <Card>
+                {/* Produtos Mais Vendidos */}
+                <Card className="h-full">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <TrendingUp className="h-5 w-5" />
@@ -325,19 +345,35 @@ const Reports = () => {
                       <ChartContainer config={{
                         value: { label: 'Quantidade', color: '#82ca9d' }
                       }}>
-                        <BarChart data={productSalesData.slice(0, 5)}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
+                        <BarChart 
+                          data={productSalesData.slice(0, 5)}
+                          margin={{ top: 10, right: 10, left: 10, bottom: 30 }}
+                          layout="vertical"
+                        >
+                          <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                          <XAxis type="number" />
+                          <YAxis 
+                            dataKey="name" 
+                            type="category" 
+                            width={100}
+                            tick={{ fontSize: 12 }}
+                          />
                           <ChartTooltip content={<ChartTooltipContent />} />
-                          <Bar dataKey="quantity" fill="#82ca9d" name="value" />
+                          <Bar 
+                            dataKey="quantity" 
+                            fill="#82ca9d" 
+                            name="value"
+                            radius={[0, 4, 4, 0]}
+                            maxBarSize={30}
+                          />
                         </BarChart>
                       </ChartContainer>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
+                {/* Despesas por Tag */}
+                <Card className="h-full">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <ChartPie className="h-5 w-5" />
@@ -348,14 +384,14 @@ const Reports = () => {
                     <div className="h-64">
                       {expensesByTag.length > 0 ? (
                         <ChartContainer config={{}}>
-                          <PieChart>
+                          <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
                             <Pie
                               data={expensesByTag}
                               cx="50%"
                               cy="50%"
                               labelLine={false}
                               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                              outerRadius={80}
+                              outerRadius={70}
                               fill="#8884d8"
                               dataKey="amount"
                               nameKey="tag"
