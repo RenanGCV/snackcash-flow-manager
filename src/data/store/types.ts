@@ -15,6 +15,8 @@ export interface StoreState extends AppState {
   // Sale actions
   addSale: (products: { productId: string, quantity: number }[], paymentMethod: PaymentMethod) => void;
   addRetroactiveSale: (products: { productId: string, quantity: number }[], paymentMethod: PaymentMethod, customDate: Date) => void;
+  editSale: (id: string, updates: { products?: { productId: string, quantity: number }[], paymentMethod?: string, date?: Date }) => void;
+  deleteSale: (id: string) => void;
   
   // Expense actions
   addExpense: (expense: Omit<Expense, 'id' | 'date'>) => void;

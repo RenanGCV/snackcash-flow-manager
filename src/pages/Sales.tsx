@@ -2,6 +2,7 @@
 import Layout from '../components/Layout';
 import SalesForm from '../components/sales/SalesForm';
 import RetroactiveSalesForm from '../components/sales/RetroactiveSalesForm';
+import SalesHistory from '../components/sales/SalesHistory';
 import PaymentMethodsManager from '../components/sales/PaymentMethodsManager';
 import { useStore } from '../data/store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,6 +24,7 @@ const Sales = () => {
           <TabsList>
             <TabsTrigger value="register">Registrar Venda</TabsTrigger>
             <TabsTrigger value="retroactive">Vendas Retroativas</TabsTrigger>
+            <TabsTrigger value="history">Histórico de Vendas</TabsTrigger>
             <TabsTrigger value="payment-methods">Formas de Pagamento</TabsTrigger>
           </TabsList>
           
@@ -54,6 +56,12 @@ const Sales = () => {
                 </a>
               </div>
             )}
+          </TabsContent>
+          
+          <TabsContent value="history">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <SalesHistory />
+            </div>
           </TabsContent>
           
           <TabsContent value="payment-methods">
