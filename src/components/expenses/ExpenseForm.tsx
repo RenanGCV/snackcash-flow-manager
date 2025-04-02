@@ -30,7 +30,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface ExpenseFormProps {
   expense?: Expense;
-  onSave?: () => void;
+  onSave: (expense: Expense) => void;
 }
 
 const ExpenseForm = ({ expense, onSave }: ExpenseFormProps) => {
@@ -98,7 +98,17 @@ const ExpenseForm = ({ expense, onSave }: ExpenseFormProps) => {
       }
       
       if (onSave) {
-        onSave();
+        // Call onSave with the current expense or a newly created one
+        const savedExpense: Expense = expense || {
+          id: 'temp-id', // This ID will be replaced by the real one in the store
+          description: values.description,
+          amount: values.amount,
+          category: values.category,
+          date: new Date(),
+          isRecurring: values.category === 'fixed' ? values.isRecurring : false,
+          recurrenceDay: values.category === 'fixed' && values.isRecurring ? values.recurrenceDay : undefined,
+        };
+        onSave(savedExpense);
       }
     } catch (error) {
       toast.error('Erro ao salvar despesa. Tente novamente.');
