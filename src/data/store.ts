@@ -47,14 +47,16 @@ export const useStore = create<StoreState>()(
       // Product actions
       addProduct: (product) => 
         set((state) => {
-          const currentUser = supabase.auth.getUser();
+          const session = supabase.auth.getSession();
+          const user_id = supabase.auth.getUser().then(res => res.data?.user?.id);
+          
           return {
             products: [...state.products, {
               ...product,
               id: crypto.randomUUID(),
               createdAt: new Date(),
               updatedAt: new Date(),
-              user_id: currentUser.data?.user?.id
+              user_id: supabase.auth.getSession().then(res => res.data?.session?.user?.id)
             }]
           };
         }),
@@ -82,8 +84,6 @@ export const useStore = create<StoreState>()(
             return sum + (product?.price || 0) * item.quantity;
           }, 0);
           
-          const currentUser = supabase.auth.getUser();
-          
           return {
             sales: [...state.sales, {
               id: crypto.randomUUID(),
@@ -91,7 +91,7 @@ export const useStore = create<StoreState>()(
               total,
               paymentMethod,
               date: new Date(),
-              user_id: currentUser.data?.user?.id
+              user_id: supabase.auth.getSession().then(res => res.data?.session?.user?.id)
             }]
           };
         }),
@@ -99,14 +99,12 @@ export const useStore = create<StoreState>()(
       // Expense actions
       addExpense: (expense) => 
         set((state) => {
-          const currentUser = supabase.auth.getUser();
-          
           return {
             expenses: [...state.expenses, {
               ...expense,
               id: crypto.randomUUID(),
               date: new Date(),
-              user_id: currentUser.data?.user?.id
+              user_id: supabase.auth.getSession().then(res => res.data?.session?.user?.id)
             }]
           };
         }),
