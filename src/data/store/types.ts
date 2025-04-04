@@ -7,6 +7,16 @@ export type { Product, Sale, Expense, PaymentMethod, AppState };
 
 // Store state with actions interface
 export interface StoreState extends AppState {
+  // Initialize store
+  initializeStore: () => Promise<void>;
+  
+  // Fetch data from Supabase
+  fetchProducts: () => Promise<void>;
+  fetchSales: () => Promise<void>;
+  fetchExpenses: () => Promise<void>;
+  fetchPaymentMethods: () => Promise<void>;
+  fetchExpenseTags: () => Promise<void>;
+  
   // Product actions
   addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateProduct: (id: string, updates: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>) => void;

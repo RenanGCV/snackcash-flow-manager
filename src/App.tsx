@@ -14,7 +14,8 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useStore } from "./data/store";
 
 const App = () => {
   // Create a client inside the component with useState
@@ -26,6 +27,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <AppContent />
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
@@ -77,6 +79,18 @@ const App = () => {
       </AuthProvider>
     </QueryClientProvider>
   );
+};
+
+// Component to initialize store data on auth change
+const AppContent = () => {
+  const initializeStore = useStore(state => state.initializeStore);
+  
+  useEffect(() => {
+    // Initialize data from Supabase
+    initializeStore();
+  }, [initializeStore]);
+  
+  return null;
 };
 
 export default App;

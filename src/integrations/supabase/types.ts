@@ -9,6 +9,95 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      expense_tags: {
+        Row: {
+          expense_id: string
+          id: string
+          tag: string
+        }
+        Insert: {
+          expense_id: string
+          id?: string
+          tag: string
+        }
+        Update: {
+          expense_id?: string
+          id?: string
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_tags_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expenses: {
+        Row: {
+          amount: number
+          category: string
+          date: string
+          description: string
+          id: string
+          is_recurring: boolean | null
+          recurrence_day: number | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          date?: string
+          description: string
+          id?: string
+          is_recurring?: boolean | null
+          recurrence_day?: number | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          date?: string
+          description?: string
+          id?: string
+          is_recurring?: boolean | null
+          recurrence_day?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -27,6 +116,102 @@ export type Database = {
           id?: string
           name?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          date: string
+          id: string
+          payment_method: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          date?: string
+          id?: string
+          payment_method: string
+          total: number
+          user_id: string
+        }
+        Update: {
+          date?: string
+          id?: string
+          payment_method?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales_items: {
+        Row: {
+          id: string
+          product_id: string
+          quantity: number
+          sale_id: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          quantity: number
+          sale_id: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          quantity?: number
+          sale_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_items_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_expense_tags: {
+        Row: {
+          id: string
+          tag: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          tag: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          tag?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_payment_methods: {
+        Row: {
+          id: string
+          method: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          method: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          method?: string
+          user_id?: string
         }
         Relationships: []
       }
